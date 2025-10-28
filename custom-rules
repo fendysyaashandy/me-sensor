@@ -1,0 +1,9 @@
+alert icmp any any -> any any (msg:"ICMP TEST - SEEN BY SNORT"; sid:1000000; rev:1;)
+# drop icmp any any -> any any (msg:"TEST - Blocked External ICMP Echo-Request"; itype:8; sid:1000004; rev:1; classtype:icmp-event;)
+# pass tcp 10.10.10.96 any <> 10.10.10.150 any (msg:"Allow Management TCP to/from Defense Center"; sid:1000000; rev:1;)
+# pass udp 10.10.10.96 any <> 10.10.10.150 any (msg:"Allow Management UDP to/from Defense Center"; sid:1000001; rev:1;)
+# drop icmp any any -> any any (msg:"ICMP Drop Test"; sid:1000002; rev:1;)
+
+# ==============================================================================
+# --- Aturan Keamanan Anda yang Sebenarnya Dimulai di Bawah Sini ---
+# ==============================================================================

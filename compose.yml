@@ -1,0 +1,58 @@
+# language: yaml
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+
+volumes:
+  snort_log:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=1g
+
+services:
+  snort:
+    image: ghcr.io/mata-elang-stable/snort3-docker-image:v2.0-debian
+    restart: unless-stopped
+    network_mode: host
+    env_file:
+      - .env
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    command: >
+      snort -c /usr/local/etc/snort/snort.lua
+            -i ${NETWORK_INTERFACE}
+            -Q
+            -A alert_json
+            -l /var/log/snort
+            --daq afpacket
+    volumes:
+      - snort_log:/var/log/snort:rw
+      - ./custom.rules:/usr/local/etc/snort3/rules/local.rules:ro
+      - ./rules:/tmp/rules:ro
+      - ./snort.lua:/usr/local/etc/snort/snort.lua:ro
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 2G
+
+  snort-parser:
+    image: ghcr.io/mata-elang-stable/sensor-snort-service:latest
+    restart: unless-stopped
+    entrypoint: >
+      sh -c "
+      touch /var/log/snort/alert_json.txt &&
+      /go/bin/app client -v
+      "
+    depends_on:
+      - snort
+    env_file:
+      - .env
+    volumes:
+      - snort_log:/var/log/snort:rw
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 512M
