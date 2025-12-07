@@ -207,6 +207,8 @@ ips =
 
     include = RULE_PATH .."/pulledpork.rules",
 
+    include = RULE_PATH .."/local.rules",
+
     variables = default_variables
 }
 
