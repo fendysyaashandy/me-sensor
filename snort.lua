@@ -21,11 +21,11 @@
 
 -- HOME_NET and EXTERNAL_NET must be set now
 -- setup the network addresses you are protecting
--- HOME_NET = '10.0.0.0/8'
+HOME_NET = '192.168.54.0/24'
 
 -- set up the external network addresses.
 -- (leave as "any" in most situations)
--- EXTERNAL_NET = '!$HOME_NET'
+EXTERNAL_NET = '!$HOME_NET'
 
 include 'snort_defaults.lua'
 
@@ -205,7 +205,7 @@ ips =
     -- note that rules files can include other rules files
     -- (see also related path vars at the top of snort_defaults.lua)
 
-    include = RULE_PATH .."/pulledpork.rules",
+    -- include = RULE_PATH .."/pulledpork.rules",
 
     include = RULE_PATH .."/local.rules",
 
